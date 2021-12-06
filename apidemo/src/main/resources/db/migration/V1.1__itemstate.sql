@@ -1,0 +1,1 @@
+CREATE TYPE itemstate as ENUM ('pay', 'add', 'del');

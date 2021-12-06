@@ -1,0 +1,1 @@
+CREATE TYPE itemtype as ENUM ('need', 'want');
