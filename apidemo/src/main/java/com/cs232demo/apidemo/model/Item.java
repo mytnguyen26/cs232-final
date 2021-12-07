@@ -1,5 +1,6 @@
 package com.cs232demo.apidemo.model;
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.*;
 
 @Entity
@@ -8,17 +9,22 @@ public abstract class Item {
     @GeneratedValue(strategy = GenerationType.AUTO) 
     private UUID id;
 
-    @Column
+    @Column(name="item_name", nullable=false,length=25)
     private String itemName;
 
-    @Column
+    @Column(name="item_desc", length=225)
     private String itemDesc;
 
-    @Column
+    @Column(name="item_quantity")
     private int itemQuantity;
 
+    @Column(name="item_priority", nullable = false)
+    private int itemPriority;
 
-    @Column
+    @Column(name="item_type", nullable = false)
+    private String itemType;
+
+    @Column(name="item_curr_price")
     private double currPrice;
 
     @Enumerated(EnumType.STRING)
@@ -29,16 +35,30 @@ public abstract class Item {
     }
 
 
-    public Item(String itemName, String itemDesc) {
+    public Item(@JsonProperty("ItemId") UUID id, 
+                @JsonProperty("name") String itemName, 
+                @JsonProperty("itemDesc") String itemDesc, 
+                @JsonProperty("itemQuantity") int itemQuantity,
+                @JsonProperty("itemPriority") int itemPriority, 
+                @JsonProperty("itemType") String itemType,
+                @JsonProperty("itemPrice") double currPrice,
+                @JsonProperty("itemState") ItemState itemState) {
+        this.id = id;
         this.itemName  = itemName;
         this.itemDesc = itemDesc;
-        this.itemQuantity = 1;
-        this.currPrice = generatePrice();
-        this.itemState = ItemState.add;
+        this.itemType = itemType;
+        this.itemQuantity = itemQuantity;
+        this.itemPriority = itemPriority;
+        this.currPrice = currPrice;
+        this.itemState = itemState;
     }
 
     public UUID getid() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getItemName() {
@@ -73,24 +93,34 @@ public abstract class Item {
         return currPrice;
     }
 
+    public void setCurrPrice(double newPrice) {
+        this.currPrice = newPrice;
+    }
 
-    public void setCurrPrice() {
-        this.currPrice = generatePrice ();
+    public int getItemPriority() {
+        return itemPriority;
     }
 
 
-    public ItemState getItemState() {
-        return itemState;
+    public void setItemPriority(int itemPriority) {
+        this.itemPriority = itemPriority;
     }
 
+
+    public String getItemType() {
+        return itemType;
+    }
+
+
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
+
+    public String getItemState() {
+        return itemState.toString();
+    }
 
     public void setItemState(ItemState itemState) {
         this.itemState = itemState;
-    }
-
-    private double generatePrice () {
-        double min = 15.0;
-        double max = 30.0; 
-        return min + Math.random() * (max - min);
     }
 }

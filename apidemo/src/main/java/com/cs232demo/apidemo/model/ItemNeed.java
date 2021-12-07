@@ -1,33 +1,49 @@
 package com.cs232demo.apidemo.model;
 
 import java.util.Date;
+import java.util.UUID;
+
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class ItemNeed extends Item{
-    @Column
-    private int itemPriority;
     
     @Temporal(TemporalType.DATE)
     private Date dueDate; 
-
+    
     public ItemNeed() {
 
     }
 
-    public ItemNeed(@JsonProperty("name") String itemName, 
-                    @JsonProperty("itemDesc") String itemDesc, int itemPriority) {
-        super(itemName, itemDesc);
-        this.itemPriority = itemPriority;
+    public ItemNeed(UUID id, 
+                    String itemName, 
+                    String itemDesc, 
+                    int itemQuantity,
+                    int itemPriority, 
+                    double currPrice,
+                    ItemState itemState,
+                    @JsonProperty("itemDue") Date dueDate) {
+        
+        super(id, 
+              itemName, 
+              itemDesc, 
+              itemQuantity,
+              itemPriority, 
+              "need",
+              currPrice, 
+              itemState
+              );
+        this.dueDate = dueDate;
     }
 
-    public int getItemPriority() {
-        return itemPriority;
+
+    public Date getDueDate() {
+        return dueDate;
     }
 
-    public void setItemPriority(int itemPriority) {
-        this.itemPriority = itemPriority;
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
     }
     
 }
