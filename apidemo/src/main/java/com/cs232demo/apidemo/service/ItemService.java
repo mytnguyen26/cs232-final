@@ -37,6 +37,7 @@ public class ItemService {
         // generate UUID
         UUID id = UUID.randomUUID();
         itemNeed.setCurrPrice(generatePrice());
+        System.out.println(itemNeed.getItemName());
         itemDao.addItem(id, itemNeed);
     }
 

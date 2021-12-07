@@ -36,7 +36,7 @@ public abstract class Item {
 
 
     public Item(@JsonProperty("ItemId") UUID id, 
-                @JsonProperty("name") String itemName, 
+                @JsonProperty("itemName") String itemName, 
                 @JsonProperty("itemDesc") String itemDesc, 
                 @JsonProperty("itemQuantity") int itemQuantity,
                 @JsonProperty("itemPriority") int itemPriority, 

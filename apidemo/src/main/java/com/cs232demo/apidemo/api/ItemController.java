@@ -21,6 +21,8 @@ public class ItemController {
 
     @PostMapping
     public void addItem(@RequestBody ItemNeed itemNeed) {
+        System.out.printf("--------Initialized Name %s\n", itemNeed.getItemName());
+        System.out.printf("--------Initialized Type %s\n", itemNeed.getItemType());
         itemService.addItem(itemNeed);
     }
 
@@ -34,7 +36,7 @@ public class ItemController {
         return itemService.getItem(itemId);
     }
 
-    @PostMapping("/remove/{itemId}")
+    @PutMapping("/remove/{itemId}")
     public void removeItem(@PathVariable("itemId") UUID itemId) {
         itemService.removeItem(itemId);
     }

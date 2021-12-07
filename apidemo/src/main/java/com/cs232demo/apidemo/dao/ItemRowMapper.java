@@ -19,7 +19,7 @@ public class ItemRowMapper implements RowMapper<ItemNeed> {
         itemNeed.setItemPriority(rs.getInt("item_prioriy"));
         itemNeed.setCurrPrice(rs.getDouble("item_curr_price"));
         itemNeed.setItemState(ItemState.valueOf(rs.getString("item_state")));
-        itemNeed.setDueDate(rs.getDate("item_due_date"));
+        itemNeed.setDueDate(rs.getDate("item_due_date").toString());
 
         return itemNeed;
 

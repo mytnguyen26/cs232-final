@@ -1,16 +1,18 @@
 package com.cs232demo.apidemo.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class ItemNeed extends Item{
     
-    @Temporal(TemporalType.DATE)
-    private Date dueDate; 
+    @Column(name="item_due_date")
+    private String dueDate; 
     
     public ItemNeed() {
 
@@ -21,16 +23,17 @@ public class ItemNeed extends Item{
                     String itemDesc, 
                     int itemQuantity,
                     int itemPriority, 
+                    String itemType,
                     double currPrice,
                     ItemState itemState,
-                    @JsonProperty("itemDue") Date dueDate) {
+                    @JsonProperty("itemDue") @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd") String dueDate) {
         
         super(id, 
               itemName, 
               itemDesc, 
               itemQuantity,
               itemPriority, 
-              "need",
+              itemType,
               currPrice, 
               itemState
               );
@@ -38,11 +41,12 @@ public class ItemNeed extends Item{
     }
 
 
-    public Date getDueDate() {
-        return dueDate;
+    public LocalDate getDueDate() {
+        LocalDate date = LocalDate.parse(dueDate);
+        return date;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
     }
     

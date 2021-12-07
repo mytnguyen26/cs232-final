@@ -3,15 +3,12 @@ package com.cs232demo.apidemo.dao;
 import java.util.List;
 import java.util.UUID;
 import java.sql.Date;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.cs232demo.apidemo.model.ItemNeed;
 import com.cs232demo.apidemo.model.ItemState;
-import com.cs232demo.apidemo.dao.ItemRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Repository;
 public class SQLItemDataAccessService implements IItemDao<ItemNeed, UUID>
                                          {
     private final JdbcTemplate jdbcTemplate; 
-    private RowMapper<ItemNeed> itemRowMapper;
 
     @Autowired
     public SQLItemDataAccessService(JdbcTemplate jdbcTemplate) {
@@ -39,25 +35,25 @@ public class SQLItemDataAccessService implements IItemDao<ItemNeed, UUID>
                             "item_state, " +
                             "item_due_date " +
                             " from Item";
-               
-        return jdbcTemplate.query(sql, (resultSet, i) -> {
-            UUID itemID = UUID.fromString(resultSet.getString("id"));
-            String itemName = resultSet.getString("item_name");
-            String itemDesc = resultSet.getString("item_desc");
-            int itemQuantity = resultSet.getInt("item_quantity");
-            int itemPriority = resultSet.getInt("item_prioriy");
-            double currPrice = resultSet.getDouble("item_curr_price");
-            ItemState itemState = ItemState.valueOf(resultSet.getString("item_state"));
-            Date dueDate = resultSet.getDate("item_due_date");
-            return new ItemNeed(itemID, 
-                                itemName, 
-                                itemDesc, 
-                                itemQuantity,
-                                itemPriority, 
-                                currPrice,
-                                itemState,
-                                dueDate);
-        }); 
+        return jdbcTemplate.query(sql, new ItemRowMapper());
+        // return jdbcTemplate.query(sql, (resultSet, i) -> {
+        //     UUID itemID = UUID.fromString(resultSet.getString("id"));
+        //     String itemName = resultSet.getString("item_name");
+        //     String itemDesc = resultSet.getString("item_desc");
+        //     int itemQuantity = resultSet.getInt("item_quantity");
+        //     int itemPriority = resultSet.getInt("item_prioriy");
+        //     double currPrice = resultSet.getDouble("item_curr_price");
+        //     ItemState itemState = ItemState.valueOf(resultSet.getString("item_state"));
+        //     Date dueDate = resultSet.getDate("item_due_date");
+        //     return new ItemNeed(itemID, 
+        //                         itemName, 
+        //                         itemDesc, 
+        //                         itemQuantity,
+        //                         itemPriority, 
+        //                         currPrice,
+        //                         itemState,
+        //                         dueDate);
+        //}); 
     }
 
     @Override
@@ -103,7 +99,7 @@ public class SQLItemDataAccessService implements IItemDao<ItemNeed, UUID>
                             entity.getItemPriority(),
                             entity.getCurrPrice(),
                             entity.getItemState(),
-                            "9999/12/31",
+                            entity.getDueDate(),
                             date,
                             date
                             );
@@ -126,7 +122,6 @@ public class SQLItemDataAccessService implements IItemDao<ItemNeed, UUID>
 
     @Override
     public void removeItemByID(UUID entityID) {
-        // TODO Auto-generated method stub
         String item_state = "del";
         String sql = "UPDATE Item " +
                      "SET item_state = Cast(? as itemstate) " +
