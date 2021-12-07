@@ -9,9 +9,10 @@ public interface IItemDao<T, K> {
 
     public List<ItemNeed> findItemByID(UUID id);
     public List<T> findAllItem() throws SQLException;
+    public List<T> findPaidItem();
     public boolean addItem(UUID id, final T entity);     // add new item 
     public void changeItemQuantity(final K entityID);    // update item quantity by id
-    public void changeItemStateToPay(final T entity);
+    public void changeItemStateToPay(final UUID entityID);
     public void removeItemByID(final K entityID);            // remove item by id
     
 }

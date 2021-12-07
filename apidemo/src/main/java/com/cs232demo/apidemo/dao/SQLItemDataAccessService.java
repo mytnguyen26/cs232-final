@@ -4,16 +4,19 @@ import java.util.List;
 import java.util.UUID;
 import java.sql.Date;
 import java.sql.SQLException;
+import javax.sql.DataSource;
 
 import com.cs232demo.apidemo.model.ItemNeed;
-import com.cs232demo.apidemo.model.ItemState;
+import com.cs232demo.apidemo.model.Wallet;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 
 @Repository("sql")
-public class SQLItemDataAccessService implements IItemDao<ItemNeed, UUID>
+public class SQLItemDataAccessService implements IItemDao<ItemNeed, UUID>,
+                                      IWalletDao
                                          {
     private final JdbcTemplate jdbcTemplate; 
 
@@ -34,26 +37,24 @@ public class SQLItemDataAccessService implements IItemDao<ItemNeed, UUID>
                             "item_curr_price, " +
                             "item_state, " +
                             "item_due_date " +
-                            " from Item";
+                            " from Item where item_state = 'add'";
         return jdbcTemplate.query(sql, new ItemRowMapper());
-        // return jdbcTemplate.query(sql, (resultSet, i) -> {
-        //     UUID itemID = UUID.fromString(resultSet.getString("id"));
-        //     String itemName = resultSet.getString("item_name");
-        //     String itemDesc = resultSet.getString("item_desc");
-        //     int itemQuantity = resultSet.getInt("item_quantity");
-        //     int itemPriority = resultSet.getInt("item_prioriy");
-        //     double currPrice = resultSet.getDouble("item_curr_price");
-        //     ItemState itemState = ItemState.valueOf(resultSet.getString("item_state"));
-        //     Date dueDate = resultSet.getDate("item_due_date");
-        //     return new ItemNeed(itemID, 
-        //                         itemName, 
-        //                         itemDesc, 
-        //                         itemQuantity,
-        //                         itemPriority, 
-        //                         currPrice,
-        //                         itemState,
-        //                         dueDate);
-        //}); 
+    }
+
+    @Override
+    public List<ItemNeed> findPaidItem() {
+        
+        final String sql = "Select id, "+
+                            "item_name, " +
+                            "item_desc, " +
+                            "item_type, " +
+                            "item_quantity, " +
+                            "item_prioriy, " +
+                            "item_curr_price, " +
+                            "item_state, " +
+                            "item_due_date " +
+                            " from Item where item_state = 'pay'";
+        return jdbcTemplate.query(sql, new ItemRowMapper());
     }
 
     @Override
@@ -114,10 +115,12 @@ public class SQLItemDataAccessService implements IItemDao<ItemNeed, UUID>
     }
 
     @Override
-    public void changeItemStateToPay(final ItemNeed entity) {
-        // TODO
-        
+    public void changeItemStateToPay(final UUID entityID) {
+        String sql = "UPDATE Item "+
+                     "Set item_state = 'pay' "+
+                     "Where id  = ?";
 
+        jdbcTemplate.update(sql, entityID);
     }
 
     @Override
@@ -130,5 +133,33 @@ public class SQLItemDataAccessService implements IItemDao<ItemNeed, UUID>
                             item_state, 
                             entityID);
         
+    }
+
+    @Override
+    public List<Wallet> getCurrWallet() {
+        String sql = "SELECT id, wallet_name, current_balanace from wallet";
+        return jdbcTemplate.query(sql, (resultSet, i) -> {
+            UUID id = UUID.fromString(resultSet.getString("id"));
+            String walletName = resultSet.getString("wallet_name");
+            double currBalance = resultSet.getDouble("current_balanace");
+            return new Wallet(id, walletName, currBalance);
+        });
+    }
+
+    @Override
+    public boolean updateTransaction(UUID walletId, 
+                                    UUID itemId, 
+                                    String transType, 
+                                    double amount) {
+        final String sql = "Call trans_item_test(?, ?, ?, ?)";
+        jdbcTemplate.update(sql ,walletId, itemId, transType, amount);
+
+        // SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate).withProcedureName("transaction_item");
+        // SqlParameterSource in = new MapSqlParameterSource().addValue("walletid", walletId)
+        //                                                    .addValue("itemid", itemId)
+        //                                                    .addValue("transtype", transType)
+        //                                                    .addValue("amount", amount);
+        // jdbcCall.execute(in);
+        return true;
     }
 }

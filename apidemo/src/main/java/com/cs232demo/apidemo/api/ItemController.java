@@ -31,14 +31,28 @@ public class ItemController {
         return itemService.getAllItem();
     } 
 
+    @GetMapping("/wallet")
+    public List<Wallet> getWallet() {
+        return itemService.getWallet();
+    }
+
     @GetMapping("/{itemId}")
     public List<ItemNeed> getItem(@PathVariable UUID itemId) {
         return itemService.getItem(itemId);
     }
 
-    @PutMapping("/remove/{itemId}")
+    @GetMapping("/bought")
+    public List<ItemNeed> getPaidItem() {
+        return itemService.getPaidItem();
+    }
+
+    @DeleteMapping("/remove/{itemId}")
     public void removeItem(@PathVariable("itemId") UUID itemId) {
         itemService.removeItem(itemId);
     }
     
+    @PostMapping("/pay/{itemId}")
+    public void payForItem(@PathVariable("itemId") UUID itemId) {
+        itemService.payForItem(itemId);
+    }
 }
