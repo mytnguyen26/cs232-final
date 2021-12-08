@@ -1,12 +1,11 @@
 package com.cs232demo.apidemo.model;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity

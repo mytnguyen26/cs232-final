@@ -1,3 +1,11 @@
+
+/**
+ * This is a class to handle requets for data for Postgresql Database
+ * When service call methods in this class, a connection to the database is
+ * established and data is transfered either to the database, or return from
+ * the database
+ * This class implements the wallet dao and item dao interface 
+ */
 package com.cs232demo.apidemo.dao;
 
 import java.util.List;
@@ -14,9 +22,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository("sql")
-public class SQLItemDataAccessService implements IItemDao<ItemNeed, UUID>,
-                                      IWalletDao
-                                         {
+public class SQLItemDataAccessService implements IItemDao<ItemNeed, UUID>, IWalletDao {
     private final JdbcTemplate jdbcTemplate; 
 
     @Autowired
@@ -73,7 +79,7 @@ public class SQLItemDataAccessService implements IItemDao<ItemNeed, UUID>,
     }
 
     @Override
-    public boolean addItem(UUID id, ItemNeed entity) { // throws Error adding to DB due to BadSQL here
+    public boolean addItem(UUID id, ItemNeed entity) throws SQLException{ // throws Error adding to DB due to BadSQL here
         long millis=System.currentTimeMillis();  
         Date date=new java.sql.Date(millis);  
         final String sql = "INSERT INTO Item (" +
@@ -109,8 +115,6 @@ public class SQLItemDataAccessService implements IItemDao<ItemNeed, UUID>,
     @Override
     public void changeItemQuantity(UUID entityID) {
         // TODO Auto-generated method stub
-        
-        
     }
 
     @Override

@@ -1,120 +1,19 @@
-import React, {useState,  useEffect, Component} from "react";
-import DatePicker from 'react-datepicker';
-
-import "react-datepicker/dist/react-datepicker.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import Card from 'react-bootstrap/Card';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form'
-import Container from 'react-bootstrap/Container';
-import ListGroup from 'react-bootstrap/ListGroup';
-import ListGroupItem from 'react-bootstrap/esm/ListGroupItem';
-import './App.css';
 import axios from "axios";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { Component, useEffect, useState } from "react";
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import ListGroupItem from 'react-bootstrap/esm/ListGroupItem';
+import Navbar from 'react-bootstrap/Navbar';
+import Form from 'react-bootstrap/Form';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Row from 'react-bootstrap/Row';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
+import './App.css';
 
-class ActiveItems extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      items: []
-    }
-  }
-  componentDidMount() {
-    axios.get("http://localhost:8080/api/v1/Item/bought")
-    .then( res => {
-      console.log(res);
-      this.setState({items: res.data});
-    });
-  }
-
-  render() {
-    const {items} = this.state
-    return (
-      <Container>
-        <Row>
-          <Col md="auto">
-          {
-          items.map(item =>
-            <Card bg = {"secondary"} 
-              text = {"light"} 
-              style={{ width: '18rem' }} 
-              key={item.id}
-              className="box">
-              <Card.Body>
-                <Card.Title>{item.itemName}</Card.Title>
-                <Card.Text>{item.itemDesc}</Card.Text>
-              </Card.Body>
-            </Card> 
-            )
-          }
-          </Col>
-        </Row>
-      </Container>
-  )}
-}
-
-const Items = () => {
-  const [items, setItems] = useState([]);
-  const fetchItem = () => {
-    axios.get("http://localhost:8080/api/v1/Item").then( res => {
-      console.log(res);
-      setItems(res.data);
-    });
-  }
-
-  const removeItem = (card, e) => {
-    axios.delete(`http://localhost:8080/api/v1/Item/remove/${card.id}`)
-    .then(res => {
-      console.log("Item Deleted");
-    })
-    .catch(err => {
-      console.log("err");
-    });
-  }
-
-  const payItem = (card, e) => {
-    axios.post(`http://localhost:8080/api/v1/Item/pay/${card.id}`)
-    .then (res => {
-      console.log("Successfully Pay For Item");
-    })
-    .catch(err => {
-      console.log("err");
-    })
-  }
-
-  useEffect(() => {
-    fetchItem();
-  }, []);
-
-  const renderCard = (card, index) => {
-    return (
-      <Col md="auto">
-        <Card bg = {"primary"} 
-          text = {"light"} 
-          style={{ width: '18rem' }} 
-          key={index}
-          className="box">
-          <Card.Body>
-            <Card.Title>{card.itemName}</Card.Title>
-            <Card.Text>{card.itemDesc}</Card.Text>
-    
-          </Card.Body>
-          <ListGroup>
-            <ListGroupItem>{card.itemQuantity}</ListGroupItem>
-            <ListGroupItem>{card.currPrice}</ListGroupItem>
-          </ListGroup>
-          <Button onClick={(e) => removeItem(card, e)}>Remove</Button>
-          <Button onClick={(e) => payItem(card, e)}>I bought this</Button>
-        </Card> 
-      </Col>
-      
-    );
-  }
-  return <Container><Row>{items.map(renderCard)}</Row></Container>
-}; 
 
 const PaidItems = () => {
   const [items, setItems] = useState([]);
@@ -150,7 +49,6 @@ const PaidItems = () => {
   return <Container><Row>{items.map(renderCard)}</Row></Container>
 }; 
 
-
 const Wallet = () => {
   const [items, setItems] = useState([]);
   const fetchItem = () => {
@@ -184,6 +82,72 @@ const Wallet = () => {
   return <Container><Row>{items.map(renderCard)}</Row></Container>
 }; 
 
+class ActiveItems extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      items: []
+    }
+  }
+  componentDidMount() {
+    axios.get("http://localhost:8080/api/v1/Item")
+    .then( res => {
+      console.log(res);
+      this.setState({items: res.data});
+    });
+  }
+
+  removeItem = (card, e) => {
+    axios.delete(`http://localhost:8080/api/v1/Item/remove/${card.id}`)
+    .then(res => {
+      window.location.reload(false);
+      console.log("Item Deleted");
+    })
+    .catch(err => {
+      console.log("err");
+    });
+  }
+
+  payItem = (card, e) => {
+    axios.post(`http://localhost:8080/api/v1/Item/pay/${card.id}`)
+    .then (res => {
+      window.location.reload(false);
+      console.log("Successfully Pay For Item");
+    })
+    .catch(err => {
+      console.log("err");
+    })
+  }
+
+  renderCard = (card, index) => {
+    return (
+      <Col md="auto">
+        <Card bg = {"primary"} 
+          text = {"light"} 
+          style={{ width: '18rem' }} 
+          key={index}
+          className="box">
+          <Card.Body>
+            <Card.Title>{card.itemName}</Card.Title>
+            <Card.Text>{card.itemDesc}</Card.Text>
+    
+          </Card.Body>
+          <ListGroup>
+            <ListGroupItem>{card.itemQuantity}</ListGroupItem>
+            <ListGroupItem>{card.currPrice}</ListGroupItem>
+          </ListGroup>
+          <Button onClick={(e) => this.removeItem(card, e)}>Remove</Button>
+          <Button onClick={(e) => this.payItem(card, e)}>I bought this</Button>
+        </Card> 
+
+      </Col>
+    );
+  }
+  render(){
+    const {items} = this.state;
+    return <Container><Row>{items.map(this.renderCard)}</Row></Container>
+  } 
+};
 class CreateItem extends Component {
   constructor(props) {
     super(props)
@@ -259,20 +223,19 @@ class CreateItem extends Component {
 }
 
 
-// TODO
-// PUT REQUEST TO UPDATE ITEM STATE BY ID
-
-
-// 
-
 function App() {
   return (
     <div className="App">
-      <h1>This is your Wish List</h1>
+      <Navbar bg="dark" variant="dark">
+        <Container>
+        <Navbar.Brand href="#home">WishList.ByMe</Navbar.Brand>
+        </Container>
+      </Navbar>
+      <h1>Wish List</h1>
       <CreateItem />
       <Wallet />
       <h2>List of Current Items</h2>
-      <Items />
+      <ActiveItems />
       <h2>List of Bought Items</h2>
       <div>
       <PaidItems />

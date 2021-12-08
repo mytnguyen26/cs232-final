@@ -1,3 +1,10 @@
+/**
+ * This Controller class receives requests coming to the endpoint
+ * and direct it to the appropriate service. For example when a POST request
+ * comes to the /pay/{itemId} endpoint, the Item Service payForItem is called 
+ * to service this request (i.e changing the item state to pay, add a pay transaction
+ * and deduct balance from the Wallet)
+ */
 package com.cs232demo.apidemo.api;
 
 import java.util.List;
