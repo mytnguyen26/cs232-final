@@ -88,7 +88,8 @@ class CreateItem extends Component {
 # Backend Service
 For the back-end, we use a Java based framework, Spring Boot. There are a few important component of the backend
 
-UML Diagram
+UML Diagram  
+![image](Final_API_project_UML.jpeg)
 
 
 ## Service Application Layer
