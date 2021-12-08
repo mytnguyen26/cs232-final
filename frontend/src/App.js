@@ -172,7 +172,7 @@ const Wallet = () => {
           style={{ width: '18rem' }} 
           key={index}
           className="box">
-          <Card.Header>Current Balance</Card.Header>
+          <Card.Header>Current Planned Balance</Card.Header>
           <Card.Body>
             <Card.Title>{card.currBalance}</Card.Title>
             <Card.Text>{card.walletName}</Card.Text>
@@ -268,14 +268,15 @@ class CreateItem extends Component {
 function App() {
   return (
     <div className="App">
-      <h1>Hello</h1>
+      <h1>This is your Wish List</h1>
       <CreateItem />
       <Wallet />
       <h2>List of Current Items</h2>
       <Items />
       <h2>List of Bought Items</h2>
       <div>
-      <ActiveItems />
+      <PaidItems />
+      {/* <ActiveItems /> */}
       </div>
     </div>
   );

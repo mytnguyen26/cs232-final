@@ -1,11 +1,21 @@
 package com.cs232demo.apidemo.api;
 
-import com.cs232demo.apidemo.service.ItemService;
-import com.cs232demo.apidemo.model.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
+
+import com.cs232demo.apidemo.model.ItemNeed;
+import com.cs232demo.apidemo.model.Wallet;
+import com.cs232demo.apidemo.service.ItemService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RequestMapping("api/v1/Item")
@@ -37,7 +47,7 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public List<ItemNeed> getItem(@PathVariable UUID itemId) {
+    public List<ItemNeed> getItem(@PathVariable("itemId") UUID itemId) {
         return itemService.getItem(itemId);
     }
 
